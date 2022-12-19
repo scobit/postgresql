@@ -2,16 +2,21 @@
 
 #### goto home directory
 `cd ~`
+#### download source code
 `wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2`
 
 #### if gz archive
 `gunzip postgresql-14.6.tar.gz`
+
 `tar xf postgresql-14.6.tar`
+
 or
+
 `tar xzf postgresql-14.6.tar.gz`
 
 #### if bz2 archive
 `bunzip2 postgresql-14.6.tar.bz2`
+
 `tar xf postgresql-14.6.tar`
 
 #### goto source folder
