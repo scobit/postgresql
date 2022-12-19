@@ -46,6 +46,7 @@ or
 ### Under postgres user
 #### create system variables
 `echo 'export PATH=/usr/local/pgsql/bin:$PATH' >> ~/.profile`
+
 `echo 'export PGDATA=/usr/local/pgsql/data' >> ~/.profile`
 #### apply changes
 `. ~/.profile`
