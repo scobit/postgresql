@@ -73,5 +73,6 @@ $PSQLRC
 #### Отображение конфигурационного каталога
 pg_config --sysconfdir
 
-
+#### Создать БД
+psql -c "CREATE DATABASE TypeDbName OWNER TypeOwnerName;"
 
