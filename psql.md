@@ -8,6 +8,14 @@ psql --help
 man psql
 
 
+
+#### create database
+createdb mydb
+
+createdb: command not found
+then PostgreSQL was not installed properly. Either it was not installed at all or your shell's search path was not set to include it. # Try calling the command with an absolute path instead: The path at your site might be different
+/usr/local/pgsql/bin/createdb mydb
+
 ### Команды psql в БД
 
 #### Список комманд psql
