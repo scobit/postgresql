@@ -138,5 +138,7 @@ sd
 
     psql2
     sadas
-    asd
-    
+aasdasd
+
+
+    drop database if exists db;
