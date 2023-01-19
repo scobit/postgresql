@@ -105,17 +105,9 @@ drop database test0;
         => drop database db;
         ERROR:  database "db" does not exist
 
-asdasdasdasd
 
-        => asdasdasdasdasdasd
        
-       
-asdasdasdasd
-
-        qwe
-        
-
-`asdasdagsfgsfgs`
+ 
 
 Поэтому можно воспользоваться другой формой (она применима и к удалению других объектов): if nott exist тоже существует
 
@@ -130,15 +122,7 @@ asdasdasdasd
   psql
     
     
-asdasdasdasd
-asd
-asd
-a
-sd
 
-    psql2
-    sadas
-aasdasd
 
 
     drop database if exists db;
