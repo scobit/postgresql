@@ -1,76 +1,35 @@
 psql 
 
-Выполнение команд SQL:
+####
+select schemaname, tablename, tableowner from pg_tables limit 10;
+      
+  
+Команда SQL может занимать и несколько строк,точка с запятой завершает ее.
 
-        => select schemaname, tablename, tableowner from pg_tables limit 10;
-         schemaname |    tablename    | tableowner 
-        ------------+-----------------+------------
-         pg_catalog | pg_statistic    | postgres
-         pg_catalog | pg_type         | postgres
-         public     | people          | postgres
-         pg_catalog | pg_authid       | postgres
-         pg_catalog | pg_attribute    | postgres
-         pg_catalog | pg_proc         | postgres
-         pg_catalog | pg_user_mapping | postgres
-         pg_catalog | pg_attrdef      | postgres
-         pg_catalog | pg_constraint   | postgres
-         pg_catalog | pg_index        | postgres
-        (10 rows)
-        
+select schemaname, tablename, tableowner
+from pg_tables limit 10;
+      
 
------------------------------------------------------------------------
 
-Команда SQL может занимать и несколько строк,
-точка с запятой завершает ее.
-
-        => select schemaname, tablename, tableowner
-        => from pg_tables limit 10;
-         schemaname |    tablename    | tableowner 
-        ------------+-----------------+------------
-         pg_catalog | pg_statistic    | postgres
-         pg_catalog | pg_type         | postgres
-         public     | people          | postgres
-         pg_catalog | pg_authid       | postgres
-         pg_catalog | pg_attribute    | postgres
-         pg_catalog | pg_proc         | postgres
-         pg_catalog | pg_user_mapping | postgres
-         pg_catalog | pg_attrdef      | postgres
-         pg_catalog | pg_constraint   | postgres
-         pg_catalog | pg_index        | postgres
-        (10 rows)
-        
-
------------------------------------------------------------------------
-
-Если вывод команды SQL не помещется на экран, для его отображения можно использовать
-специальную программу $PAGER.
+Если вывод команды SQL не помещется на экран, для его отображения можно использовать специальную программу $PAGER.
 Использование можно включать или выключать с помощью \pset pager on|off
 
------------------------------------------------------------------------
+
 
 Для управления выводом используется команда \pset в разных вариациях.
 Например, можно включить отображение полей "в столбик":
 \pset expanded on|off
 или просто \x
 
-        => \pset expanded on
-        Expanded display is on.
+\pset expanded on
+      
 
-        => select schemaname, tablename, tableowner from pg_tables limit 2;
-        -[ RECORD 1 ]------------
-        schemaname | pg_catalog
-        tablename  | pg_statistic
-        tableowner | postgres
-        -[ RECORD 2 ]------------
-        schemaname | pg_catalog
-        tablename  | pg_type
-        tableowner | postgres
-        
+select schemaname, tablename, tableowner from pg_tables limit 2;
+   
+\pset expanded off
+      
 
-        => \pset expanded off
-        Expanded display is off.
 
------------------------------------------------------------------------
 
 Если вывод предстоит разбирать программно, то можно:
 а) убрать выравнивание полей
@@ -92,17 +51,8 @@ psql
 
 Посмотрим на результат:
 
-        => select schemaname, tablename, tableowner from pg_tables limit 10;
-        pg_catalog pg_statistic postgres
-        pg_catalog pg_type postgres
-        public people postgres
-        pg_catalog pg_authid postgres
-        pg_catalog pg_attribute postgres
-        pg_catalog pg_proc postgres
-        pg_catalog pg_user_mapping postgres
-        pg_catalog pg_attrdef postgres
-        pg_catalog pg_constraint postgres
-        pg_catalog pg_index postgres
+select schemaname, tablename, tableowner from pg_tables limit 10;
+
 
 ...и вернем обратно:
 
@@ -116,156 +66,92 @@ psql
 
 Можно включить формат вывода HTML:
 
-        => \pset format html
-        Output format is html.
+\pset format html
+ 
 
-        => select schemaname, tablename, tableowner from pg_tables limit 1;
-        <table border="1">
-          <tr>
-            <th align="center">schemaname</th>
-            <th align="center">tablename</th>
-            <th align="center">tableowner</th>
-          </tr>
-          <tr valign="top">
-            <td align="left">pg_catalog</td>
-            <td align="left">pg_statistic</td>
-            <td align="left">postgres</td>
-          </tr>
-        </table>
-        <p>(1 row)<br />
-        </p>
+select schemaname, tablename, tableowner from pg_tables limit 1;
+   
 
-        => \pset format aligned
-        Output format is aligned.
+\pset format aligned
 
------------------------------------------------------------------------
 
 Можно выполнять команды shell:
 
-        => \! ls | head -n 10
-        dba1_04_psql.sh
-        dba1_05_databases.sh
-        dba1_06_tablespaces.sh
-        dba1_07_system_catalog.sh
-        dba1_08_objects.sh
-        dba1_11_privileges.sh
-        dba1_12_configuration.sh
-        dba1_14_monitoring.sh
-        dba1_16_logical_backup.sh
-        dba1_17_physical_backup.sh
+\! ls | head -n 10
+  
 
-        => \! pwd
-        /home/postgres/edu/dba1/practice
+\! pwd
+     
 
------------------------------------------------------------------------
 
 Для изменения текущего (для psql) каталога есть специальная команда:
 
-        => \! pwd
-        /home/postgres/edu/dba1/practice
+\! pwd
+       
+\cd ..
 
-        => \cd ..
+\! pwd
+  
+\cd practice
 
-        => \! pwd
-        /home/postgres/edu/dba1
-
-        => \cd practice
-
------------------------------------------------------------------------
 
 Можно установить переменную окружения:
 
-        => \! echo $TEST
+\! echo $TEST
         
 
-        => \setenv TEST Hello
+\setenv TEST Hello
 
-        => \! echo $TEST
-        Hello
-
------------------------------------------------------------------------
-
+\! echo $TEST
+    
 Можно записать вывод команды в файл с помощью \o[ut]:
 
-        => \o dba1_log
+\o dba1_log
 
-        => select schemaname, tablename, tableowner from pg_tables limit 5;
+\select schemaname, tablename, tableowner from pg_tables limit 5;
 
 На экран ничего не попало. Посмотрим в файле:
 
-        => \! cat dba1_log
-         schemaname |  tablename   | tableowner 
-        ------------+--------------+------------
-         pg_catalog | pg_statistic | postgres
-         pg_catalog | pg_type      | postgres
-         public     | people       | postgres
-         pg_catalog | pg_authid    | postgres
-         pg_catalog | pg_attribute | postgres
-        (5 rows)
+\! cat dba1_log
         
 
 Вернем вывод на экран:
 
-        => \o
-
------------------------------------------------------------------------
+\o
 
 Запишем в файл команды SQL.
 
 
-        => \a
-        Output format is unaligned.
+\a
+Output format is unaligned.
 
-        => \t
-        Tuples only is on.
+\t
+Tuples only is on.
 
-        => \pset fieldsep ' '
-        Field separator is " ".
+\pset fieldsep ' '
+Field separator is " ".
 
-        => \o dba1_log
+\o dba1_log
 
-        => select 'select count(*) from', tablename, ';' from pg_tables limit 3;
+select 'select count(*) from', tablename, ';' from pg_tables limit 3;
 
-        => \o
+\o
 
-        => \t
-        Tuples only is off.
+\t
+Tuples only is off.
 
-        => \a
-        Output format is aligned.
+\a
+Output format is aligned.
 
 -----------------------------------------------------------------------
 
 Вот что получилось в файле:
 
-        => \! cat dba1_log
-        select count(*) from pg_statistic ;
-        select count(*) from pg_type ;
-        select count(*) from people ;
-
------------------------------------------------------------------------
+\! cat dba1_log
 
 И выполним теперь эти команды с помощью \i[nclude]:
 
-        => \i dba1_log
-         count 
-        -------
-           407
-        (1 row)
-        
-         count 
-        -------
-           372
-        (1 row)
-        
-         count 
-        -------
-             2
-        (1 row)
-        
-
------------------------------------------------------------------------
-
+\i dba1_log
 Другие способы выполнить команды из файла:
 а) psql < filename
 б) psql -f filename
@@ -280,48 +166,31 @@ psql
 
 Выполним команду и выведем содержимое буфера с помощью \p[rint]:
 
-        => select now();
-                      now              
-        -------------------------------
-         2015-12-30 15:27:01.954074+03
-        (1 row)
+select now();
         
-
-        => \p
-        select now();
+\p
 
 Выполним команду, не вводя ее заново (в остальном \g аналогична точке с запятой):
-
-        => \g
-                      now              
-        -------------------------------
-         2015-12-30 15:27:01.959257+03
-        (1 row)
-        
-
------------------------------------------------------------------------
+\g
 
 Можно записать содержимое буфера в файл с помощью \w[rite]:
 
-        => \w dba1_log
+\w dba1_log
 
-        => \! cat dba1_log
-        select now();
+\! cat dba1_log
 
 Наконец, очистим буфер с помощью \r[eset]:
 
-        => \r
-        Query buffer reset (cleared).
+\r
+Query buffer reset (cleared).
 
-        => \p
-        Query buffer is empty.
+\p
+Query buffer is empty.
 
------------------------------------------------------------------------
 
 Можно периодически выполнять команду из буфера с помощью \watch seconds
 
-Буфер также можно отредактировать с помощью \e[dit],
-после чего отредактированная команда выполнится.
+Буфер также можно отредактировать с помощью \e[dit], после чего отредактированная команда выполнится.
 
 -----------------------------------------------------------------------
 
@@ -344,11 +213,9 @@ psql
         => \echo :TEST
         :TEST
 
------------------------------------------------------------------------
-
 Можно установить значение переменной результатом запроса с помощью \gset вместо точки с запятой:
 
-        => select now() as curr_time \gset
+select now() as curr_time \gset
 
         => \echo :curr_time
         2015-12-30 15:27:01.98212+03
@@ -356,25 +223,10 @@ psql
 Значение переменной можно запросить и у пользователя с помощью \prompt text name
 А также указать при запуске: psql -v name=value
 
------------------------------------------------------------------------
 
 Без параметров \set выдает значения всех переменных:
 
-        => \set
-        AUTOCOMMIT = 'on'
-        PROMPT1 = '%/%R%# '
-        PROMPT2 = '%/%R%# '
-        PROMPT3 = '>> '
-        VERBOSITY = 'default'
-        VERSION = 'PostgreSQL 9.4.4 on x86_64-unknown-linux-gnu, compiled by gcc (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4, 64-bit'
-        HISTFILE = 'hist'
-        DBNAME = 'postgres'
-        USER = 'postgres'
-        PORT = '5432'
-        ENCODING = 'UTF8'
-        curr_time = '2015-12-30 15:27:01.98212+03'
-
------------------------------------------------------------------------
+\set
 
 С помощью серии команд, начинающихся на \d, можно смотреть информацию об объектах БД.
 Например:
@@ -398,9 +250,6 @@ psql
           WHERE r.rulename <> '_RETURN'::name;
         
 
-Подробнее эти команды будут рассмотрены позже.
-
------------------------------------------------------------------------
 
 При сборке с библиотекой Readline имеются дополнительные возможности.
 
@@ -426,8 +275,5 @@ psql
         => \echo :COMP_KEYWORD_CASE
         :COMP_KEYWORD_CASE
 
-Конец демонстрации.
 
------------------------------------------------------------------------
-
-        => \q
+\q
