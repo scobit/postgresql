@@ -124,3 +124,19 @@ asdasdasdasd
         DROP DATABASE
 
         => \q
+
+
+
+  psql
+    
+    
+asdasdasdasd
+asd
+asd
+a
+sd
+
+    psql2
+    sadas
+    asd
+    
