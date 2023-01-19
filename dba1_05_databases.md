@@ -105,6 +105,8 @@ drop database test0;
         => drop database db;
         ERROR:  database "db" does not exist
 
+        => asdasdasdasdasdasd
+
 Поэтому можно воспользоваться другой формой (она применима и к удалению других объектов): if nott exist тоже существует
 
         => drop database if exists db;
