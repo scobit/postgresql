@@ -55,155 +55,60 @@ select digest('Hello, world!', 'md5');
 #### Вычислить размер БД
 select pg_database_size('test0');
         
+#### Вычислить размер БД в читаемом виде
+select pg_size_pretty(pg_database_size('test0'));
 
-Чтобы не считать разряды, можно вывести размер в читаемом виде:
 
-        => select pg_size_pretty(pg_database_size('test0'));
-         pg_size_pretty 
-        ----------------
-         6531 kB
-        (1 row)
+#### Создадим таблицу и индекс:
+
+create table t(n numeric);
+
+create index t_idx on t(n);
+
+insert into t select * from generate_series(1, 10000);
+
+#### вывести размер, занимаемый таблицей:
+select pg_size_pretty(pg_table_size('t'));
+
+#### размер индексов таблицы:
+select pg_size_pretty(pg_indexes_size('t'));
+
+#### размер таблицы вместе с индексами:
+select pg_size_pretty(pg_total_relation_size('t'));
+
+#### Созданную базу данных можно переименовать:
+
+alter database test rename to db;
+
+
+
+#### Изменить количество соединений:
+alter database db connection limit 10;
         
-
------------------------------------------------------------------------
-
-Создадим таблицу и индекс:
-
-        => create table t(n numeric);
-        CREATE TABLE
-
-        => create index t_idx on t(n);
-        CREATE INDEX
-
-        => insert into t select * from generate_series(1, 10000);
-        INSERT 0 10000
-
------------------------------------------------------------------------
-
-Теперь можно вывести размер, занимаемый таблицей:
-
-        => select pg_size_pretty(pg_table_size('t'));
-         pg_size_pretty 
-        ----------------
-         392 kB
-        (1 row)
-        
-
------------------------------------------------------------------------
-
-А также размер индексов таблицы:
-
-        => select pg_size_pretty(pg_indexes_size('t'));
-         pg_size_pretty 
-        ----------------
-         240 kB
-        (1 row)
-        
-
-И размер таблицы вместе с индексами:
-
-        => select pg_size_pretty(pg_total_relation_size('t'));
-         pg_size_pretty 
-        ----------------
-         632 kB
-        (1 row)
-        
-
------------------------------------------------------------------------
-
-Созданную базу данных можно переименовать:
-
-        => alter database test rename to db;
-        ERROR:  database "db" already exists
-
-        => select datname, datistemplate, datallowconn, datconnlimit from pg_database;
-          datname  | datistemplate | datallowconn | datconnlimit 
-        -----------+---------------+--------------+--------------
-         template1 | t             | t            |           -1
-         template0 | t             | f            |           -1
-         postgres  | f             | t            |           -1
-         test      | f             | t            |           -1
-         db        | f             | t            |           -1
-         test0     | f             | t            |           20
-        (6 rows)
-        
-
------------------------------------------------------------------------
-
-Изменить количество соединений:
-
-        => alter database db connection limit 10;
-        ALTER DATABASE
-
-        => select datname, datistemplate, datallowconn, datconnlimit from pg_database;
-          datname  | datistemplate | datallowconn | datconnlimit 
-        -----------+---------------+--------------+--------------
-         template1 | t             | t            |           -1
-         template0 | t             | f            |           -1
-         postgres  | f             | t            |           -1
-         test      | f             | t            |           -1
-         test0     | f             | t            |           20
-         db        | f             | t            |           10
-        (6 rows)
-        
-
------------------------------------------------------------------------
 
 Базу данных можно удалить (если к ней нет активных подключений).
-Поскольку мы подключены к другой базе, то удаление пройдет успешно:
 
-        => \conninfo
-        You are connected to database "test0" as user "postgres" via socket in "/tmp" at port "5432".
+#### 
+\conninfo
 
-        => drop database db;
-        DROP DATABASE
+####
+drop database db;
 
-        => select datname, datistemplate, datallowconn, datconnlimit from pg_database;
-          datname  | datistemplate | datallowconn | datconnlimit 
-        -----------+---------------+--------------+--------------
-         template1 | t             | t            |           -1
-         template0 | t             | f            |           -1
-         postgres  | f             | t            |           -1
-         test      | f             | t            |           -1
-         test0     | f             | t            |           20
-        (5 rows)
-        
+####
+\c postgres
 
------------------------------------------------------------------------
-
-Удалим и вторую базу.
-
-        => \c postgres
-        You are now connected to database "postgres" as user "postgres".
-
-        => drop database test0;
-        DROP DATABASE
-
-        => select datname, datistemplate, datallowconn, datconnlimit from pg_database;
-          datname  | datistemplate | datallowconn | datconnlimit 
-        -----------+---------------+--------------+--------------
-         template1 | t             | t            |           -1
-         template0 | t             | f            |           -1
-         postgres  | f             | t            |           -1
-         test      | f             | t            |           -1
-        (4 rows)
-        
-
------------------------------------------------------------------------
-
+####
+drop database test0;
+    
 Если база данных не существует, команда DROP DATABASE будет ругаться:
 
         => drop database db;
         ERROR:  database "db" does not exist
 
-Поэтому можно воспользоваться другой формой (она применима и к удалению других объектов):
+Поэтому можно воспользоваться другой формой (она применима и к удалению других объектов): if nott exist тоже существует
 
         => drop database if exists db;
         NOTICE:  database "db" does not exist, skipping
         DROP DATABASE
-
-Конец демонстрации.
-
------------------------------------------------------------------------
 
         => \q
