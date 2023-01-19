@@ -26,10 +26,8 @@ http://www.postgresql.org/docs/9.4/static/manage-ag-templatedbs.html
 
 
 
-4.  и всей базой
-данных, сравнить с п. 2
 
-#### Создать БД с именем DbNAme на основе шаблона template0
+#### Создать БД с именем DbName на основе шаблона template0
 CREATE DATABASE DbName TEMPLATE template0;
 
 #### Вычислить объем, занимаемый базой данных DbName
