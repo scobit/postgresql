@@ -112,6 +112,9 @@ asdasdasdasd
        
 asdasdasdasd
 
+        qwe
+        
+
 `asdasdagsfgsfgs`
 
 Поэтому можно воспользоваться другой формой (она применима и к удалению других объектов): if nott exist тоже существует
