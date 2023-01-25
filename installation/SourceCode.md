@@ -7,17 +7,38 @@
 #### Source code site
 http://www.postgresql.org/ftp/source/
 
+#### Информация по установке с оффициального сайта
+http://www.postgresql.org/docs/9.4/static/install-procedure.html
 
-#### goto home directory
+#### Информация о пользователе postgres с оффициального сайта
+http://www.postgresql.org/docs/9.4/static/postgres-user.html
+
+#### Информация по созданию кластера с оффициального сайта
+http://www.postgresql.org/docs/9.4/static/creating-cluster.html
+
+#### Информация по установке postgresql
+http://www.postgresql.org/docs/9.4/static/install-post.html
+
+#### Запуск сервера
+http://www.postgresql.org/docs/9.4/static/server-start.html
+
+#### Остановка сервера
+http://www.postgresql.org/docs/9.4/static/server-shutdown.html
+
+#### Список расширений, входящих в поставку:
+http://www.postgresql.org/docs/9.4/static/contrib.html
+http://www.postgresql.org/docs/9.4/static/contrib-prog.html
+
+#### Переходим в домашний каталог
 ```
 cd ~
 ```
-#### download source code
+#### Загружаем исходный код
 ```
 wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2
 ```
 
-#### if gz archive
+#### Если тип архива gz
 
 ```
 gunzip postgresql-14.6.tar.gz
@@ -30,8 +51,7 @@ or
 tar xzf postgresql-14.6.tar.gz
 ```
 
-#### if bz2 archive
-
+#### Если тип архива bz2
 ```
 bunzip2 postgresql-14.6.tar.bz2
 ```
@@ -39,80 +59,256 @@ bunzip2 postgresql-14.6.tar.bz2
 tar xf postgresql-14.6.tar
 ```
 
-#### goto source folder
-
+#### Переходим в распакованный каталог установки
 ```
 cd postgresql-14.6/
 ```
-
-
-### Конфигурация
-
-
-
-Конфигурация
-$ ./configure
-
-параметры --prefix каталог установки (/usr/local/pgsql/)
---enable-debug отладочная информация
-
-переменные СС компилятор Си
-CFLAGS параметры компилятора
-
-проверить после установки: $ pg_config
-
-
-
 
 #### Конфигурация
 ```
 ./configure
 ```
 
-#### Сброс (перед повторной конфигурацией)
+Конфигурация проверяет наличие необходимого инструментария, узнает особенности системы (такие, как занимаемый разными типами  
+данных объем памяти) и настраивает скрипты сборки, учитывая также переданные параметры.
+
+Различных параметров очень много. В качестве примера: параметры, которые разработчики могут попросить выставить для поиска проблем:  
+
+#### для компиляции с отладочной информации
+```
+--enable_debug
+```
+
+#### для отключения оптимизации, переменные СС компилятор Си CFLAGS параметры компилятора
+```
+CCFLAGS 
+```
+
+#### каталог установки, по умолчанию /usr/local/pgsql
+```
+--prefix /usr/local/pgsql
+``` 
+
+#### После установки можно посмотреть параметры с помощью утилиты
+```
+pg_config
+```
+
+#### Сброс (Перед повторной конфигурацией следует выполнить очистку)
 ```
 make distclean
 ```
 
-#### make
-`make`
+
+#### Сборка выполняется с помощью GNU make. Можно собрать только СУБД, а можно и вместе с расширениями и документацией.
+#### Сборка, должна завершиться сообщением "All of PostgreSQL is successfully made. Ready to install".
+```
+make
+```
+#### Или сборка с расширениями и документацией. Должна завершиться сообщением "PostgreSQL, contrib and HTML documentation successfully made. Ready to install".
+```
+make world 
+```
+### После сборки можно (но не обязательно) проверить результат с помощью тестов.Проверка, должна завершиться сообщением "All 145 tests passed"
+```
+make check
+```
+
 
 #### clean make
-`make distclean`
+```
+make distclean
+```
 
-#### installation 
-`sudo make install`
+#### Собранный PostgreSQL необходимо установить (каталог установки указывается при конфигурировании). Для этого требуются права администратора.
+#### Сообщение об успешной установке "PostgreSQL installation complete." или "PostgreSQL, contrib, and documentation installation complete."
+```
+sudo make install
+```
+или
+```
+sudo make install-world 
+```
 
-#### add postgres user
-`sudo adduser postgres`
+#### Если требуется установка только необходимого для подключения к внешней СУБД, нужно выполнить сборку полностью и установить только необходимые файлы.
+```
+sudo make -C src/bin install
+```
+```
+sudo make -C src/include install
+```
+```
+sudo make -C src/interfaces install
+```
+```
+sudo make -C doc install
+```
 
-#### create data folder
-`sudo mkdir -p /usr/local/pgsql/data`
+#### СУБД рассчитана на работу под отдельным пользователем postgres. Создаём пользователя, под которым будет работать СУБД
+```
+sudo adduser postgres
+```
 
-#### change ownership
-`sudo chown postgres /usr/local/pgsql/data`
+#### Также необходимо создать каталог для данных. Он должен принадлежать пользователю postgres.
+```
+sudo mkdir /usr/local/pgsql/data
+```
+```
+sudo chown postgres /usr/local/pgsql/data
+```
 
-### Under postgres user
-#### create system variables
-`echo 'export PATH=/usr/local/pgsql/bin:$PATH' >> ~/.profile`
+### Далее все под пользователем postgres!
 
-`echo 'export PGDATA=/usr/local/pgsql/data' >> ~/.profile`
-#### apply changes
-`. ~/.profile`
-#### init database
-`initdb -k`
-#### start database
-`pg_ctl start -l logfile`
-#### chech database
-`psql -c 'select now();'`
-##### stop database
-`pg_ctl stop -m fast`
+### Создание кластера
 
-### Install extension
-### Under general user
-#### goto extension folder
-`cd ~/postgresql-14.6/contrib/oid2name`
-#### make
-`make`
-#### install
-`sudo make install`
+#### Создаём переменные окружения
+#### На практике установку этих переменных следует автоматизировать.
+
+#### PATH позволяет вызывать утилиты PostgreSQL из командной строки (путь можно уточнить командой pg_config --bindir)
+#### MANPATH нужен для вызова справки, если сервер был собран и установлен с документацией (путь можно уточнить командой pg_config --mandir)
+```
+echo 'export PATH=/usr/local/pgsql/bin:$PATH' >> ~/.profile
+```
+
+```
+echo 'export MANPATH=/usr/local/pgsql/share/man:$MANPATH' ~/.profile
+```
+#### PGDATA указывает путь до каталога с данными, созданного на прошлом шаге. 
+#### Эту переменную можно не задавать, но тогда путь придется  указывать в параметрах всех команд.
+```
+echo 'export PGDATA=/usr/local/pgsql/data' >> ~/.profile
+```
+    
+#### Примение изменений
+```
+. ~/.profile
+```
+
+#### Создание кластера
+#### Ключ -k утилиты initdb включает подсчет контрольной суммы страниц, что позволяет своевременно обнаружить повреждение данных.
+```
+initdb -k
+```
+#### или вместо $PGDATA можно указывать путь в параметре -D
+```
+initdb -k -D /usr/local/pgsql/data
+```
+#### или инициализация средствами pg_ctl
+```
+pg_ctl initdb -o "-k" -D /usr/local/pgsql/data
+```
+
+
+### Запуск сервера
+
+Запуск сервера – это обычно запуск программы postgres в фоновом режиме. Вывод перенаправляется в журнал, туда же перенаправляется
+и поток ошибок. Но удобнее пользоваться pg_ctl. И в том, и другом случае postgres «демонизируется» (отвязывается от породившего его процесса).
+
+#### Запуск
+```
+postgres >logfile 2>&1 &
+```
+или
+```
+pg_ctl start -l logfile
+```
+
+#### Чтобы проверить, что сервер запустился, можно выполнить простую команду (вывод текущего времени). 
+```
+psql -c 'select now()
+```
+
+
+
+### Останов сервера
+
+Есть три режима останова:
+
+#### дождаться всех сеансов и выполнить контрольную точку (неопределенно долго)
+smart - ожидает завершения всех сеансов и выполняет контрольную точку (kill -TERM pid)
+#### принудительно завершить все сеансы и выполнить контрольную точку (быстрее)
+fast -  принудительно завершает сеансы и выполняет контрольную точку (kill -INT pid)
+#### и просто принудительно завершить все сеансы (совсем быстро, но при старте серверу потребуется восстановление).
+immediate - принудительно завершает сеансы, при запуске потребуется восстановление (kill -QUIT pid)
+
+Можно воспользоваться pg_ctl, а можно вручную послать соответствующий сигнал процессу postmaster.
+
+#### Узнать номер процесса postmaster
+```
+pg_ctl status
+```
+или посмотреть в файле
+```
+cat $PGDATA/postmaster.pid
+```
+
+#### Удобный способ, позволяющий уменьшить время простоя (при выполнении первой контрольной точки система работоспособна; вторая контрольная точка выполнится уже быстро):
+```
+psql -c CHECKPOINT && pg_ctl stop -m fast
+```
+
+### Установка расширений
+
+Поставляемые расширения модули (45 штук)  
+клиентские и серверные программы (9 штук)
+
+Кроме расширений, входящих в поставку, существует масса других расширений.
+
+Команды можно выполнять под обычным пользователем.
+
+Можно выполнить для всех расширений (из каталога contrib/) или для отдельного (из каталога contrib/.../)
+
+Для модулей, добавляющих объекты SQL, дополнительно требуется выполнить команду CREATE EXTENSION
+
+Некоторые расширения имеют отдельную инструкцию по установке.
+
+#### Переходим в каталог с расширением
+```
+cd ~/postgresql-14.6/contrib/oid2name|pgcrypto
+```
+#### Выполняем сборку
+```
+make
+```
+#### Устанавливаем
+```
+sudo make install
+```
+#### 
+
+
+
+
+-- под пользователем postgres
+$ echo 'export PATH=/usr/local/pgsql/bin:$PATH' >> ~/.profile
+$ echo 'export PGDATA=/usr/local/pgsql/data' >> ~/.profile
+$ . ~/.profile
+$ initdb -k
+$ pg_ctl start -l logfile
+$ psql -c 'select now();'
+-- под пользователем postgres
+$ pg_ctl stop -m fast
+-- под обычным пользователем
+$ cd ~/postgresql-9.4.4/contrib/oid2name
+$ make
+$ sudo make install
+
+https://buildfarm.postgresql.org/
+
+Сайт на котором зарегистрироваться и он спец софт будет компилировать и устаналивать ПО
+Также на сайте есть информация о поддержке платформ
+
+export things in file .profile (at home dir)
+they will start always when we login via it user
+
+initdb -k - страницы будут снабжены контрольными сусммами
+и Postgres будет проверять что контрольная сумма совпадает
+спасает от дисковых проблем
+
+pg_ctl status
+
+pg_ctl stop по сути останавливает процесс посмастер
+В КАТАЛОГЕ С КЛАСЕТРОМ БУДЕТ ФАЙЛ с названием postmasterpid
+в первой строке файла номер процесса
+
+oid2name --help
