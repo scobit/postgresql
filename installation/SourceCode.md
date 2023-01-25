@@ -12,22 +12,46 @@ cd ~
 ```
 wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2
 ```
+
+
+$ gunzip postgresql-9.4.4.tar.gz
+$ tar xf postgresql-9.4.4.tar
+$ cd postgresql-9.4.4
+
+postgresql-9.4.4.tar.bz2
+$ bunzip2 postgresql-9.4.4.tar.bz2
+$ tar xf postgresql-9.4.4.tar
+$ cd postgresql-9.4.4
+
+
+
 #### if gz archive
-`gunzip postgresql-14.6.tar.gz`
 
-`tar xf postgresql-14.6.tar`
-
+```
+gunzip postgresql-14.6.tar.gz
+```
+```
+tar xf postgresql-14.6.tar
+```
 or
-
-`tar xzf postgresql-14.6.tar.gz`
+```
+tar xzf postgresql-14.6.tar.gz
+```
 
 #### if bz2 archive
-`bunzip2 postgresql-14.6.tar.bz2`
 
-`tar xf postgresql-14.6.tar`
+```
+bunzip2 postgresql-14.6.tar.bz2
+```
+```
+tar xf postgresql-14.6.tar
+```
 
 #### goto source folder
-`cd postgresql-14.6/`
+
+```
+cd postgresql-14.6/
+```
 
 #### configure
 `./configure`
