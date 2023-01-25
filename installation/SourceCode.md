@@ -1,10 +1,17 @@
 ## Install from source code (postgresql-14.6 example)
 
-#### goto home directory
-`cd ~`
-#### download source code
-`wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2`
+#### Source code site
+http://www.postgresql.org/ftp/source/
 
+
+#### goto home directory
+```
+cd ~
+```
+#### download source code
+```
+wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2
+```
 #### if gz archive
 `gunzip postgresql-14.6.tar.gz`
 
