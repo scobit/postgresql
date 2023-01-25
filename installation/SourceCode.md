@@ -1,5 +1,9 @@
 ## Install from source code (postgresql-14.6 example)
 
+Исходный код доступен по указанному адресу в двух вариантах (gzip и bzip2).  
+Весь процесс установки выполняется обычным пользователем системы.  
+Права системного администратора требуются только для последнего шага – установки уже собранного PostgreSQL.
+
 #### Source code site
 http://www.postgresql.org/ftp/source/
 
@@ -12,18 +16,6 @@ cd ~
 ```
 wget https://ftp.postgresql.org/pub/source/v14.6/postgresql-14.6.tar.bz2
 ```
-
-
-$ gunzip postgresql-9.4.4.tar.gz
-$ tar xf postgresql-9.4.4.tar
-$ cd postgresql-9.4.4
-
-postgresql-9.4.4.tar.bz2
-$ bunzip2 postgresql-9.4.4.tar.bz2
-$ tar xf postgresql-9.4.4.tar
-$ cd postgresql-9.4.4
-
-
 
 #### if gz archive
 
@@ -53,8 +45,34 @@ tar xf postgresql-14.6.tar
 cd postgresql-14.6/
 ```
 
-#### configure
-`./configure`
+
+### Конфигурация
+
+
+
+Конфигурация
+$ ./configure
+
+параметры --prefix каталог установки (/usr/local/pgsql/)
+--enable-debug отладочная информация
+
+переменные СС компилятор Си
+CFLAGS параметры компилятора
+
+проверить после установки: $ pg_config
+
+
+
+
+#### Конфигурация
+```
+./configure
+```
+
+#### Сброс (перед повторной конфигурацией)
+```
+make distclean
+```
 
 #### make
 `make`
