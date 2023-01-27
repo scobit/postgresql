@@ -216,3 +216,79 @@ select schemaname, tablename, tableowner from pg_tables limit 1;
   
 \cd /tpm
 ```
+
+#### Установить переменную окружения:
+```
+\! echo $TEST
+        
+\setenv TEST Hello
+
+\! echo $TEST
+```
+
+
+#### Можно записать вывод команды в файл с помощью \o[ut]:
+```
+\o dba1_log
+
+\select schemaname, tablename, tableowner from pg_tables limit 5;
+```
+
+#### На экран ничего не попало. Посмотрим в файле:
+```
+\! cat dba1_log
+```        
+
+#### Вернем вывод на экран:
+```
+\o
+```
+
+#### Запишем в файл команды SQL.
+```
+\a
+```
+```
+\t
+```
+```
+\pset fieldsep ' '
+```
+```
+\o dba1_log
+```
+```
+select 'select count(*) from', tablename, ';' from pg_tables limit 3;
+```
+```
+\o
+```
+```
+\t
+```
+```
+\a
+```
+
+#### Вот что получилось в файле:
+```
+\! cat dba1_log
+```
+
+#### И выполним теперь эти команды с помощью \i[nclude]:
+```
+\i dba1_log
+```
+
+#### Другие способы выполнить команды из файла:
+```
+psql < filename
+psql -f filename
+psql -c command (работает только для одной команды)
+```
+
+#### Файл также можно отредактировать, не выходя из psql, при этом используется редактор $PSQL_EDITOR (или $EDITOR, или $VISUAL)
+```
+\e[dit] filename
+```
+
