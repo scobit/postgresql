@@ -125,3 +125,94 @@ psql -c "CREATE DATABASE TypeDbName OWNER TypeOwnerName;"
 echo '\timing on' >> ~/.psqlrc
 ```
 
+#### Пример выполнения SELECT
+SELECT schemaname, tablename, tableowner FROM pg_tables LIMIT 10;
+
+
+#### Команда SQL может занимать и несколько строк,точка с запятой завершает ее.
+```
+SELECT schemaname, tablename, tableowner 
+FROM pg_tables LIMIT 10;
+```
+
+
+#### Если вывод команды SQL не помещется на экран, для его отображения можно использовать специальную программу $PAGER.
+#### Использование можно включать или выключать с помощью 
+```
+\pset pager on|off
+```
+
+#### Для управления выводом используется команда \pset в разных вариациях.
+#### Например, можно включить отображение полей "в столбик":
+```
+\pset expanded on|off
+```
+или просто 
+```
+\x
+```
+```
+\pset expanded on  
+select schemaname, tablename, tableowner from pg_tables limit 2;     
+\pset expanded off  
+```
+
+#### Если вывод предстоит разбирать программно, то можно:
+#### убрать выравнивание полей
+```
+\pset format unaligned
+```
+#### убрать вывод заголовка таблицы
+```
+\pset tuples_only on
+```
+#### заменить разделитель
+```
+\pset fieldsep ' '
+```
+
+#### Проверка
+```
+select schemaname, tablename, tableowner from pg_tables limit 10;
+```
+
+#### Возвращаем исходные значения
+``` 
+\pset format aligned
+```
+```
+\pset tuples_only off
+```
+
+
+#### Можно включить формат вывода HTML:
+```
+\pset format html
+``` 
+#### Проверка
+```
+select schemaname, tablename, tableowner from pg_tables limit 1;
+```
+#### Возвращаем исходное значение
+```
+\pset format aligned
+```
+
+#### Выполнить shell комманду:
+```
+\! ls | head -n 10
+```
+```
+\! pwd
+```
+
+#### Для изменения текущего (для psql) каталога есть специальная команда:
+```
+\! pwd
+       
+\cd ..
+
+\! pwd
+  
+\cd /tpm
+```
