@@ -20,6 +20,7 @@ apt-get update
 apt install postgresql-9.6
 apt install postgresql-9.6-pgpool2
 ```
+
 #### Добавляем в переменные окружения PGDATA
 ```
 vim /etc/environment
@@ -30,6 +31,14 @@ PGDATA="/data/local/db/data"
 ```
 cp /usr/lib/postgresql/9.6/bin/* /usr/sbin/
 ```
+
+#### Выключаем автоматически запущенный кластер и удаляем его
+```
+pg_ctl stop
+
+rm -rf /var/lib/postgresql/9.6/main
+```
+
 
 #### Создаём кластер БД (запускаем от имени пользователя postgres)
 ```
