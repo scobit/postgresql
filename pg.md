@@ -105,7 +105,7 @@ host  all             postgres        192.168.0.0/16            md5
 
 #### Настраиваем параметры WAL Archiving
 ```
-vim /var/lib/postgresql/9.6/main/postgresql.conf
+vim /data/local/db/data/postgresql.conf
 
 wal_level = hot_standby
 max_wal_senders = 3
@@ -114,5 +114,57 @@ archive_mode    = on
 archive_command = 'cp %p /path_to/archive/%f'
 ```
 
+#### Создаём базу с главного сервера (запускаем на ведомом от пользователя postgres)
+```
+pg_basebackup -v -D /data/local/db/data -R -P -h 192.168.0.172 -p 5433 -U replication
+
+```
+
+#### Редактируем postgresql.conf на standby ноде
+```
+vim /data/local/db/data/postgresql.conf
+
+hot_standby = on
+hot_standby_feedback = on
+```
+
+#### Редактируем recovery.conf для Wal архивации на standby ноде
+```
+vim $PGDATA/recovery.conf
+
+standby_mode = 'on'
+primary_conninfo = 'host=10.1.10.150 port=5433 user=replication password=reppassword'
+trigger_file = '$PGDATA/im_master'
+restore_command = 'cp /path_to/archive/%f "%p"'
+
+```
+#### Запускаем standby
+```
+pg_ctl -D /data/local/db/data -l /tmp/logfile start
+```
+
+#### Проверка репликации
+```
+#### on primary node
+
+sudo -u postgres psql
+
+CREATE DATABASE replicationtest;
+
+\l
+
+#### on standby node
+
+sudo -u postgres psql
+
+\l
+
+DROP DATABASE replicationtest;
+
+#### on primary node
+
+DROP DATABASE replicationtest;
+
+```
 
 
