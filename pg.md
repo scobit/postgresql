@@ -23,7 +23,7 @@ apt install postgresql-9.6-pgpool2
 #### Добавляем в переменные окружения PGDATA
 ```
 vim /etc/environment
-PGDATA="/var/lib/postgresql/9.6/main"
+PGDATA="/data/local/db/data"
 ```
 
 #### Копируем все исполняемые файлы postgres в один из каталогов переменной PATH 
@@ -31,9 +31,13 @@ PGDATA="/var/lib/postgresql/9.6/main"
 cp /usr/lib/postgresql/9.6/bin/* /usr/sbin/
 ```
 
-#### Команда запуска БД (запускаем от имени пользователя postgres)
+#### Создаём кластер БД (запускаем от имени пользователя postgres)
 ```
-/usr/lib/postgresql/9.6/bin/pg_ctl -D /var/lib/postgresql/9.6/main -l /tmp/logfile start
+mkdir -p /data/local/db/data
+
+chown -R postgres:postgres /data
+
+pg_ctl -D /data/local/db/data -l /tmp/logfile start
 ```
 
 #### Меняем пароль пользователя postgres в БД
@@ -70,11 +74,9 @@ chmod 0600 /var/lib/postgresql/.pgpass
 
 #### Редактируем файл postgresql.conf
 ```
-cp /etc/postgresql/9.6/main/postgresql.conf /var/lib/postgresql/9.6/main/postgresql.conf
+cp /data/local/db/data/postgresql.conf /data/local/db/data/postgresql.conf.bak
 
-chown postgres:postgres /var/lib/postgresql/9.6/main/postgresql.conf
-
-vim /var/lib/postgresql/9.6/main/postgresql.conf
+vim /data/local/db/data/postgresql.conf
 
 listen_addresses = '*'
 port = 5433
@@ -82,11 +84,9 @@ port = 5433
 
 #### Редактируем pg_hba.conf
 ```
-cp /etc/postgresql/9.6/main/pg_hba.conf /var/lib/postgresql/9.6/main/pg_hba.conf
+cp /data/local/db/data/pg_hba.conf /data/local/db/data/pg_hba.conf.bak
 
-chown postgres:postgres /var/lib/postgresql/9.6/main/pg_hba.conf
-
-vim /var/lib/postgresql/9.6/main/pg_hba.conf
+vim /data/local/db/data/pg_hba.conf
 
 host  replication     replication     192.168.0.172/32          md5
 host  replication     replication     192.168.0.173/32          md5
