@@ -33,7 +33,7 @@ cp /usr/lib/postgresql/9.6/bin/* /usr/sbin/
 
 #### Команда запуска БД (запускаем от имени пользователя postgres)
 ```
-/usr/lib/postgresql/9.6/bin/pg_ctl -D /var/lib/postgresql/9.6/main -l logfile start
+/usr/lib/postgresql/9.6/bin/pg_ctl -D /var/lib/postgresql/9.6/main -l /tmp/logfile start
 ```
 
 #### Меняем пароль пользователя postgres в БД
@@ -49,15 +49,53 @@ passwd postgres
 ```
 
 
+#### Создаем пользователя для выполнения репликации
+```
+CREATE ROLE replication WITH REPLICATION PASSWORD 'Qweasd123' LOGIN;
+```
 
+#### Создаем файл аутентификации
+```
+vim /var/lib/postgresql/.pgpass
 
+*:*:*:replication:reppassword
+```
 
+#### Файл аутентификации требует определённых прав
+```
+chown postgres:postgres /var/lib/postgresql/.pgpass
 
+chmod 0600 /var/lib/postgresql/.pgpass
+```
 
+#### Редактируем файл postgresql.conf
+```
+vim /var/lib/postgresql/9.6/main/postgresql.conf
 
+listen_addresses = '*'
+port = 5433
+```
 
+#### Редактируем pg_hba.conf
+```
+vim /var/lib/postgresql/9.6/main/pg_hba.conf
 
+host  replication     replication     192.168.0.172/32          md5
+host  replication     replication     192.168.0.173/32          md5
+host  all             postgres        192.168.0.0/16            md5
+```
+### Configuring Primary Server
 
+#### Настраиваем параметры WAL Archiving
+```
+vim /var/lib/postgresql/9.6/main/postgresql.conf
+
+wal_level = hot_standby
+max_wal_senders = 3
+wal_keep_segments = 32
+archive_mode    = on
+archive_command = 'cp %p /path_to/archive/%f'
+```
 
 
 
