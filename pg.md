@@ -70,6 +70,10 @@ chmod 0600 /var/lib/postgresql/.pgpass
 
 #### Редактируем файл postgresql.conf
 ```
+cp /etc/postgresql/9.6/main/postgresql.conf /var/lib/postgresql/9.6/main/postgresql.conf
+
+chown postgres:postgres /var/lib/postgresql/9.6/main/postgresql.conf
+
 vim /var/lib/postgresql/9.6/main/postgresql.conf
 
 listen_addresses = '*'
@@ -78,6 +82,10 @@ port = 5433
 
 #### Редактируем pg_hba.conf
 ```
+cp /etc/postgresql/9.6/main/pg_hba.conf /var/lib/postgresql/9.6/main/pg_hba.conf
+
+chown postgres:postgres /var/lib/postgresql/9.6/main/pg_hba.conf
+
 vim /var/lib/postgresql/9.6/main/pg_hba.conf
 
 host  replication     replication     192.168.0.172/32          md5
